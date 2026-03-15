@@ -128,6 +128,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TEMPLATES[0]['DIRS'] = [BASE_DIR / "templates"]
 
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
