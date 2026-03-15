@@ -1,0 +1,211 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes por antena - MYM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-oscuro: #03122b;
+            --azul-medio: #0b2f6b;
+            --azul-brillante: #00a8ff;
+            --celeste: #6fd3ff;
+            --blanco: #f5faff;
+            --negro-azulado: #0a0f1f;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--azul-oscuro), var(--negro-azulado));
+            min-height: 100vh;
+            color: var(--blanco);
+        }
+
+        .navbar-custom {
+            background: rgba(3, 18, 43, 0.95);
+            border-bottom: 2px solid var(--azul-brillante);
+            box-shadow: 0 4px 20px rgba(0, 168, 255, 0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--blanco) !important;
+            letter-spacing: 1px;
+        }
+
+        .btn-nav {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .titulo-principal {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--blanco);
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: var(--celeste);
+            margin-bottom: 35px;
+        }
+
+        .antena-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(0,168,255,0.15);
+            border-radius: 20px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+            margin-bottom: 35px;
+            overflow: hidden;
+        }
+
+        .antena-header {
+            background: linear-gradient(90deg, #0b2f6b, #00a8ff);
+            color: white;
+            padding: 16px 20px;
+        }
+
+        .antena-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .antena-header p {
+            margin: 4px 0 0;
+            font-size: 0.95rem;
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: white;
+        }
+
+        .table thead th {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            border: none;
+            text-align: center;
+        }
+
+        .table tbody tr,
+        .table tbody td {
+            background: rgba(255,255,255,0.03) !important;
+            color: white !important;
+            border-color: rgba(111,211,255,0.10);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover,
+        .table tbody tr:hover td {
+            background: rgba(0,168,255,0.10) !important;
+        }
+
+        .badge-pago {
+            background: linear-gradient(135deg, #00a8ff, #0b2f6b);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .badge-pendiente {
+            background: linear-gradient(135deg, #1d2b53, #3a7bd5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .mensaje-vacio {
+            color: var(--celeste);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .contenido {
+            padding-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{% static 'logo_mym.png' %}" height="45" class="me-2" alt="Logo MYM">
+            MYM Internet
+        </a>
+
+        <div>
+            <a class="btn btn-outline-light btn-nav me-2" href="/">Panel Principal</a>
+            <a class="btn btn-outline-info btn-nav me-2" href="/pendientes/">Pendientes</a>
+            
+            <a class="btn btn-outline-light btn-nav" href="/admin/">Admin</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container contenido">
+    <h1 class="titulo-principal">Clientes por antena</h1>
+    <p class="subtitulo">Visualización organizada de clientes según la antena asignada</p>
+
+    {% for antena in antenas %}
+        <div class="antena-card">
+            <div class="antena-header">
+                <h3>📡 {{ antena.nombre }}</h3>
+                <p>Ubicación: {{ antena.ubicacion }}</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Dirección</th>
+                            <th>IP</th>
+                            <th>Router</th>
+                            <th>Día de pago</th>
+                            <th>Precio mensual</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in antena.cliente_set.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ cliente.nombre }}</td>
+                                <td>{{ cliente.telefono }}</td>
+                                <td>{{ cliente.direccion }}</td>
+                                <td>{{ cliente.ip }}</td>
+                                <td>{{ cliente.router }}</td>
+                                <td>{{ cliente.dia_pago }}</td>
+                                <td>${{ cliente.precio_mensual }}</td>
+                                <td>
+                                    {% if cliente.estado_pago %}
+                                        <span class="badge-pago">Pagado</span>
+                                    {% else %}
+                                        <span class="badge-pendiente">Pendiente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="mensaje-vacio">Esta antena no tiene clientes registrados.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

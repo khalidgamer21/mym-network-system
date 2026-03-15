@@ -1,0 +1,225 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes pendientes - MYM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --azul-oscuro: #03122b;
+            --azul-medio: #0b2f6b;
+            --azul-brillante: #00a8ff;
+            --celeste: #6fd3ff;
+            --blanco: #f5faff;
+            --negro-azulado: #0a0f1f;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--azul-oscuro), var(--negro-azulado));
+            min-height: 100vh;
+            color: var(--blanco);
+        }
+
+        .navbar-custom {
+            background: rgba(3, 18, 43, 0.95);
+            border-bottom: 2px solid var(--azul-brillante);
+            box-shadow: 0 4px 20px rgba(0, 168, 255, 0.15);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--blanco) !important;
+            letter-spacing: 1px;
+        }
+
+        .btn-nav {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .titulo-pagina {
+            text-align: center;
+            font-size: 2.1rem;
+            font-weight: 700;
+            margin-top: 40px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 12px rgba(111, 211, 255, 0.2);
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: var(--celeste);
+            margin-bottom: 35px;
+        }
+
+        .tabla-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 22px;
+            padding: 20px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(0, 168, 255, 0.15);
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--blanco);
+            overflow: hidden;
+            border-radius: 18px;
+        }
+
+        .table thead th {
+            background: linear-gradient(90deg, #0b2f6b, #00a8ff);
+            color: white;
+            border: none;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .table tbody tr {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+        .table tbody tr:hover {
+            background: rgba(0, 168, 255, 0.08);
+        }
+
+        .table td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 16px;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #0a0f1f;
+    font-weight: 500;
+}
+
+        .badge-pendiente {
+            background: linear-gradient(135deg, #1d2b53, #3a7bd5);
+            color: white;
+            padding: 9px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        .btn-pagar {
+            background: linear-gradient(135deg, #00a8ff, #0b2f6b);
+            border: none;
+            color: white;
+            border-radius: 10px;
+            padding: 9px 16px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 168, 255, 0.2);
+        }
+
+        .btn-pagar:hover {
+            background: linear-gradient(135deg, #0b2f6b, #00a8ff);
+            color: white;
+        }
+
+        .mensaje-vacio {
+            color: var(--celeste);
+            font-style: italic;
+        }
+
+        .contenido {
+            padding-top: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* TABLA CLIENTES PENDIENTES */
+
+.tabla-clientes {
+    background: rgba(255,255,255,0.04);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.tabla-clientes thead th {
+    background: linear-gradient(90deg,#0b2f6b,#00a8ff);
+    color: white !important;
+    border: none;
+}
+
+.tabla-clientes tbody tr,
+.tabla-clientes tbody td {
+    background: rgba(255,255,255,0.04) !important;
+    color: white !important;
+}
+
+.tabla-clientes tbody tr:hover,
+.tabla-clientes tbody tr:hover td {
+    background: rgba(0,168,255,0.10) !important;
+}
+
+.tabla-clientes td {
+    border-color: rgba(111,211,255,0.15) !important;
+}
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{% static 'logo_mym.png' %}" height="45" class="me-2" alt="Logo MYM">
+            MYM 
+        </a>
+
+        <div>
+            <a class="btn btn-outline-light btn-nav me-2" href="/">Panel Principal</a>
+            <a class="btn btn-outline-primary btn-nav me-2" href="/clientes-por-antena/">Clientes por antena</a>
+            
+            <a class="btn btn-outline-primary btn-nav" href="/admin/">Clientes</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container contenido">
+    <h1 class="titulo-pagina">Clientes con pagos pendientes</h1>
+    <p class="subtitulo">Consulta y actualiza el estado de pago de tus clientes</p>
+
+    <div class="tabla-box">
+        <div class="table-responsive">
+            <table class="table text-center align-middle tabla-clientes">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Dirección</th>
+                        <th>Estado</th>
+                        <th>Pago</th>
+                        <th>Factura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td>{{ cliente.nombre }}</td>
+                        <td>{{ cliente.direccion }}</td>
+                        <td>
+                            <span class="badge-pendiente">Pendiente</span>
+                        </td>
+                        <td>
+                            <a href="{% url 'marcar_pagado' cliente.id %}" class="btn btn-pagar">
+                                ✔ Marcar pagado
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'generar_factura_cliente' cliente.id %}" class="btn btn-outline-info">
+                                📄 Generar factura
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="mensaje-vacio">No hay clientes pendientes.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
